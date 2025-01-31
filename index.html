@@ -78,21 +78,20 @@
     return `rgb(${r}, ${g}, ${b})`;
   }
 
-  function convertText() {
-    let inputText = document.getElementById("inputText").value;
-    let outputText = inputText
-      .replace(/<span style="font-size: ?[^"]*px;">/g, "<span>")  // span 태그 치환 추가
-      .replace(/<p><span.*?>(.*?)<\/span><\/p>/g, function(match, name) {
-        if (colorMap[name]) {
-            let rgbColor = hexToRgb(colorMap[name]);
-            return `<p><span style="background-color: ${rgbColor}; color: rgb(255, 255, 255);">${name}</span></p>`;
-        } else {
-            return match;
-        }
+function convertText() {
+  let inputText = document.getElementById("inputText").value;
+  let outputText = inputText
+    .replace(/<p><br><\/p><p>(.*?)<\/p>/g, function(match, name) {
+      if (colorMap[name]) {
+        let rgbColor = hexToRgb(colorMap[name]);
+        return `<p><br><p><font color="ffffff" style="background-color: ${rgbColor};">${name}</font></p>`;
+      } else {
+        return `<p><font color="#000000" style="background-color: rgb(255, 255, 255);">${name}</font></p>`; // 기본값 추가
+      }
     });
 
-    document.getElementById("outputText").value = outputText;
-  }
+  document.getElementById("outputText").value = outputText;
+}
 
   function copyToClipboard() {
     let outputText = document.getElementById("outputText");
