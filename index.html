@@ -70,6 +70,38 @@
     "에나": "#ccaa88",
     "미즈키": "#ddaacc"
   };
+  
+  
+  const colorfont = {
+  미쿠: '#000000',
+  린: '#000000',
+  렌: '#000000',
+  루카: '#000000',
+  메이코: '#ffffff',
+  MEIKO: '#ffffff',
+  카이토: '#ffffff',
+  KAITO: '#ffffff',
+  이치카: '#000000',
+  사키: '#000000',
+  호나미: '#ffffff',
+  시호: '#000000',
+  미노리: '#000000',
+  하루카: '#000000',
+  아이리: '#000000',
+  시즈쿠: '#000000',
+  코하네: '#ffffff',
+  안: '#ffffff',
+  아키토: '#ffffff',
+  토우야: '#ffffff',
+  츠카사: '#000000',
+  에무: '#ffffff',
+  네네: '#000000',
+  루이: '#000000',
+  카나데: '#ffffff',
+  마후유: '#ffffff',
+  에나: '#000000',
+  미즈키: '#000000'
+  };
 
   function hexToRgb(hex) {
     let r = parseInt(hex.slice(1, 3), 16);
@@ -80,13 +112,26 @@
 
 function convertText() {
   let inputText = document.getElementById("inputText").value;
+
+  // 첫 번째 변환
   let outputText = inputText
-    .replace(/<p><br><\/p><p>(.*?)<\/p>/g, function(match, name) {
-      if (colorMap[name]) {
+    .replace(/<br><\/p><p>(.*?)<\/p><p>/g, function (match, name) {
+      if (colorMap[name] && colorfont[name]) {
         let rgbColor = hexToRgb(colorMap[name]);
-        return `<p><br><p><font color="ffffff" style="background-color: ${rgbColor};">${name}</font></p>`;
+        return `<br></p><p><font color="${colorfont[name]}" style="background-color: ${rgbColor};">${name}</font></p><p>`;
       } else {
-        return `<p><font color="#000000" style="background-color: rgb(255, 255, 255);">${name}</font></p>`; // 기본값 추가
+        return match;
+      }
+    });
+
+  // 두 번째 변환: <br></p><p>를 하나 더 추가
+  outputText = outputText
+    .replace(/<br><\/p><p><br><\/p><p>(.*?)<\/p><p>/g, function (match, name) {
+      if (colorMap[name] && colorfont[name]) {
+        let rgbColor = hexToRgb(colorMap[name]);
+        return `<br></p><p><br></p><p><font color="${colorfont[name]}" style="background-color: ${rgbColor};">${name}</font></p><p>`;
+      } else {
+        return match;
       }
     });
 
