@@ -21,11 +21,57 @@
     border: none;
     cursor: pointer;
   }
+  .input-group {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+  }
+  .input-group label {
+    margin-right: 5px;
+    white-space: nowrap; /* Label text doesn't wrap */
+  }
+  .input-group input[type="text"] {
+      width: 150px;
+      margin-right: 5px;
+  }
+
+  /* Style for the labels */
+  #grayLabel {
+      background-color: #9c9c94;
+      color: white;
+      padding: 2px 5px; /* Add some padding for better appearance */
+      border-radius: 3px; /* Optional: rounded corners */
+  }
+  #lightGrayLabel {
+      background-color: #cec6ce;
+            padding: 2px 5px; /* Add some padding for better appearance */
+      border-radius: 3px; /* Optional: rounded corners */
+  }
+
 </style>
 </head>
 <body>
 
 <h1>프로세카 이름 색 입히기</h1>
+
+<div class="input-group">
+  <label for="grayText" id="grayLabel">회색:</label>  <!-- Added id="grayLabel" -->
+  <input type="text" id="grayText" placeholder="회색 텍스트">
+</div>
+<div class="input-group">
+  <label for="lightGrayText" id="lightGrayLabel">연회색:</label> <!-- Added id="lightGrayLabel" -->
+  <input type="text" id="lightGrayText" placeholder="연회색 텍스트">
+</div>
+
+<div class="input-group">
+    <label for="otherText">기타:</label>
+    <input type="text" id="otherText" placeholder="기타 텍스트">
+    <input type="color" id="otherColor" value="#636363">
+    <select id="otherFontColor">
+        <option value="#ffffff">흰색</option>
+        <option value="#000000">검은색</option>
+    </select>
+</div>
 
 <div>
   <textarea id="inputText" placeholder="텍스트를 입력하세요."></textarea>
@@ -70,37 +116,37 @@
     "에나": "#ccaa88",
     "미즈키": "#ddaacc"
   };
-  
-  
+
+
   const colorfont = {
-  미쿠: '#ffffff',
-  린: '#000000',
-  렌: '#000000',
-  루카: '#000000',
-  메이코: '#ffffff',
-  MEIKO: '#ffffff',
-  카이토: '#ffffff',
-  KAITO: '#ffffff',
-  이치카: '#ffffff',
-  사키: '#000000',
-  호나미: '#ffffff',
-  시호: '#000000',
-  미노리: '#000000',
-  하루카: '#000000',
-  아이리: '#000000',
-  시즈쿠: '#000000',
-  코하네: '#ffffff',
-  안: '#ffffff',
-  아키토: '#ffffff',
-  토우야: '#ffffff',
-  츠카사: '#ffffff',
-  에무: '#ffffff',
-  네네: '#ffffff',
-  루이: '#ffffff',
-  카나데: '#ffffff',
-  마후유: '#ffffff',
-  에나: '#ffffff',
-  미즈키: '#ffffff'
+    미쿠: '#ffffff',
+    린: '#000000',
+    렌: '#000000',
+    루카: '#000000',
+    메이코: '#ffffff',
+    MEIKO: '#ffffff',
+    카이토: '#ffffff',
+    KAITO: '#ffffff',
+    이치카: '#ffffff',
+    사키: '#000000',
+    호나미: '#ffffff',
+    시호: '#000000',
+    미노리: '#000000',
+    하루카: '#000000',
+    아이리: '#000000',
+    시즈쿠: '#000000',
+    코하네: '#ffffff',
+    안: '#ffffff',
+    아키토: '#ffffff',
+    토우야: '#ffffff',
+    츠카사: '#ffffff',
+    에무: '#ffffff',
+    네네: '#ffffff',
+    루이: '#ffffff',
+    카나데: '#ffffff',
+    마후유: '#ffffff',
+    에나: '#ffffff',
+    미즈키: '#ffffff'
   };
 
   function hexToRgb(hex) {
@@ -110,33 +156,52 @@
     return `rgb(${r}, ${g}, ${b})`;
   }
 
-function convertText() {
-  let inputText = document.getElementById("inputText").value;
+  function convertText() {
+    let inputText = document.getElementById("inputText").value;
+    let grayText = document.getElementById("grayText").value;
+    let lightGrayText = document.getElementById("lightGrayText").value;
+    let otherText = document.getElementById("otherText").value;
+    let otherColor = document.getElementById("otherColor").value;
+    let otherFontColor = document.getElementById("otherFontColor").value;
 
-  // 첫 번째 변환
-  let outputText = inputText
-    .replace(/<br><\/p><p>(.*?)<\/p><p>/g, function (match, name) {
-      if (colorMap[name] && colorfont[name]) {
-        let rgbColor = hexToRgb(colorMap[name]);
-        return `<br></p><p><font color="${colorfont[name]}" style="background-color: ${rgbColor};">${name}</font></p><p>`;
-      } else {
-        return match;
-      }
-    });
 
-  // 두 번째 변환: <br></p><p>를 하나 더 추가
-  outputText = outputText
-    .replace(/<br><\/p><p><br><\/p><p>(.*?)<\/p><p>/g, function (match, name) {
-      if (colorMap[name] && colorfont[name]) {
-        let rgbColor = hexToRgb(colorMap[name]);
-        return `<br></p><p><br></p><p><font color="${colorfont[name]}" style="background-color: ${rgbColor};">${name}</font></p><p>`;
-      } else {
-        return match;
-      }
-    });
+    // 동적으로 colorMap과 colorfont 업데이트
+    if (grayText) {
+      colorMap[grayText] = "#9c9c94";
+      colorfont[grayText] = "#ffffff";
+    }
+    if (lightGrayText) {
+      colorMap[lightGrayText] = "#cec6ce";
+      colorfont[lightGrayText] = "#000000";
+    }
+    if (otherText) {
+        colorMap[otherText] = otherColor;
+        colorfont[otherText] = otherFontColor;
+    }
 
-  document.getElementById("outputText").value = outputText;
-}
+        // 첫 번째 변환
+    let outputText = inputText
+      .replace(/<br><\/p><p>(.*?)<\/p><p>/g, function (match, name) {
+        if (colorMap[name] && colorfont[name]) {
+          let rgbColor = hexToRgb(colorMap[name]);
+          return `<br></p><p><font color="${colorfont[name]}" style="background-color: ${rgbColor};">${name}</font></p><p>`;
+        } else {
+          return match;
+        }
+      });
+
+    // 두 번째 변환
+      outputText = outputText.replace(/<br><\/p><p><br><\/p><p>(.*?)<\/p><p>/g, function (match, name) {
+          if (colorMap[name] && colorfont[name]) {
+            let rgbColor = hexToRgb(colorMap[name]);
+            return `<br></p><p><br></p><p><font color="${colorfont[name]}" style="background-color: ${rgbColor};">${name}</font></p><p>`;
+          } else {
+            return match;
+          }
+        });
+
+    document.getElementById("outputText").value = outputText;
+  }
 
   function copyToClipboard() {
     let outputText = document.getElementById("outputText");
