@@ -206,10 +206,10 @@
 
         if (select.value === "custom") {
             customColorInput.style.display = "flex";
-            inputText.value = "";  // Clear input text
+            // inputText.value = "";  // 주석 처리: 텍스트 입력 값을 변경하지 않음
         } else {
             customColorInput.style.display = "none";
-            inputText.value = select.value;
+            // inputText.value = select.value; // 주석 처리: 텍스트 입력 값을 변경하지 않음
             colorInput.value = colorMap[select.value];
             fontColorInput.value = colorfont[select.value];
         }
@@ -245,12 +245,12 @@
 
     // 기타1 업데이트
     if (colorPresetSelect1 !== 'custom') {
-      if (otherText1) {
+      if (otherText1) {  // otherText1이 비어있지 않은 경우에만 업데이트
         colorMap[otherText1] = colorMap[colorPresetSelect1];
         colorfont[otherText1] = colorfont[colorPresetSelect1];
       }
     } else {
-      if (otherText1) {
+      if (otherText1) { // otherText1이 비어있지 않은 경우에만 업데이트
         colorMap[otherText1] = otherColor1;
         colorfont[otherText1] = otherFontColor1;
       }
@@ -258,12 +258,12 @@
 
     // 기타2 업데이트
     if (colorPresetSelect2 !== 'custom') {
-        if(otherText2){
+        if(otherText2){ // otherText2가 비어있지 않은 경우에만 업데이트
             colorMap[otherText2] = colorMap[colorPresetSelect2];
             colorfont[otherText2] = colorfont[colorPresetSelect2];
         }
     } else {
-      if (otherText2) {
+      if (otherText2) { // otherText2가 비어있지 않은 경우에만 업데이트
         colorMap[otherText2] = otherColor2;
         colorfont[otherText2] = otherFontColor2;
       }
@@ -316,10 +316,10 @@
     populateColorPresets("colorPresetSelect2");
 
     document.getElementById("colorPresetSelect1").addEventListener("change", () => {
-        handlePresetChange("colorPresetSelect1", "otherColor1", "otherFontColor1", "customColorInput1");
+        handlePresetChange("colorPresetSelect1", "otherText1", "otherColor1", "otherFontColor1", "customColorInput1");
     });
     document.getElementById("colorPresetSelect2").addEventListener("change", () => {
-        handlePresetChange("colorPresetSelect2", "otherColor2", "otherFontColor2", "customColorInput2");
+        handlePresetChange("colorPresetSelect2", "otherText2", "otherColor2", "otherFontColor2", "customColorInput2");
     });
 
     handlePresetChange("colorPresetSelect1", "otherText1", "otherColor1", "otherFontColor1", "customColorInput1");
