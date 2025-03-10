@@ -47,7 +47,7 @@
               padding: 2px 5px; /* Add some padding for better appearance */
         border-radius: 3px; /* Optional: rounded corners */
     }
-    #customColorInput {
+    .customColorInput {
         display: none; /* Initially hide the custom color input */
     }
 
@@ -67,18 +67,34 @@
 </div>
 
 <div class="input-group">
-    <label for="otherText">기타:</label>
-    <input type="text" id="otherText" placeholder="기타 텍스트">
-    <select id="colorPresetSelect">
+    <label for="otherText1">기타1:</label>
+    <input type="text" id="otherText1" placeholder="기타1 텍스트">
+    <select id="colorPresetSelect1">
         <option value="custom">직접 입력</option>
         <!-- Options will be dynamically populated here -->
     </select>
-    <div id="customColorInput">
-        <input type="color" id="otherColor" value="#636363">
-        <select id="otherFontColor">
+    <div class="customColorInput" id="customColorInput1">
+        <input type="color" id="otherColor1" value="#636363">
+        <select id="otherFontColor1">
             <option value="#ffffff">흰색</option>
             <option value="#000000">검은색</option>
         </select>
+    </div>
+</div>
+
+<div class="input-group">
+    <label for="otherText2">기타2:</label>
+    <input type="text" id="otherText2" placeholder="기타2 텍스트">
+    <select id="colorPresetSelect2">
+        <option value="custom">직접 입력</option>
+        <!-- Options will be dynamically populated here -->
+    </select>
+    <div class="customColorInput" id="customColorInput2">
+      <input type="color" id="otherColor2" value="#636363">
+      <select id="otherFontColor2">
+        <option value="#ffffff">흰색</option>
+        <option value="#000000">검은색</option>
+      </select>
     </div>
 </div>
 
@@ -158,8 +174,14 @@
     미즈키: '#ffffff'
   };
 
-    function populateColorPresets() {
-        const select = document.getElementById("colorPresetSelect");
+    function populateColorPresets(selectElementId) {
+        const select = document.getElementById(selectElementId);
+        select.innerHTML = ''; // Clear existing options
+        const customOption = document.createElement("option");
+        customOption.value = "custom";
+        customOption.textContent = "직접 입력";
+        select.appendChild(customOption);
+
         for (const name in colorMap) {
             const option = document.createElement("option");
             option.value = name;
@@ -175,63 +197,81 @@
     return `rgb(${r}, ${g}, ${b})`;
   }
 
-    function handlePresetChange() {
-      const select = document.getElementById("colorPresetSelect");
-      const customColorInput = document.getElementById("customColorInput");
-      const otherText = document.getElementById("otherText");
-      const otherColor = document.getElementById("otherColor");
-      const otherFontColor = document.getElementById("otherFontColor");
+    function handlePresetChange(selectElementId, inputTextId, colorInputId, fontColorInputId, customColorInputId) {
+        const select = document.getElementById(selectElementId);
+        const customColorInput = document.getElementById(customColorInputId);
+        const inputText = document.getElementById(inputTextId);
+        const colorInput = document.getElementById(colorInputId);
+        const fontColorInput = document.getElementById(fontColorInputId);
+
+        if (select.value === "custom") {
+            customColorInput.style.display = "flex";
+            inputText.value = "";  // Clear input text
+        } else {
+            customColorInput.style.display = "none";
+            inputText.value = select.value;
+            colorInput.value = colorMap[select.value];
+            fontColorInput.value = colorfont[select.value];
+        }
+    }
+
+  function convertText() {
+    let inputText = document.getElementById("inputText").value;
+    let grayText = document.getElementById("grayText").value;
+    let lightGrayText = document.getElementById("lightGrayText").value;
+
+    // 기타1 관련 변수
+    let otherText1 = document.getElementById("otherText1").value;
+    let otherColor1 = document.getElementById("otherColor1").value;
+    let otherFontColor1 = document.getElementById("otherFontColor1").value;
+    let colorPresetSelect1 = document.getElementById("colorPresetSelect1").value;
+
+    // 기타2 관련 변수
+    let otherText2 = document.getElementById("otherText2").value;
+    let otherColor2 = document.getElementById("otherColor2").value;
+    let otherFontColor2 = document.getElementById("otherFontColor2").value;
+    let colorPresetSelect2 = document.getElementById("colorPresetSelect2").value;
 
 
-      if (select.value === "custom") {
-        customColorInput.style.display = "flex";
-        otherText.value = ""; // Clear otherText when switching to custom
+    // 동적으로 colorMap과 colorfont 업데이트 (회색, 연회색)
+    if (grayText) {
+      colorMap[grayText] = "#9c9c94";
+      colorfont[grayText] = "#ffffff";
+    }
+    if (lightGrayText) {
+      colorMap[lightGrayText] = "#cec6ce";
+      colorfont[lightGrayText] = "#000000";
+    }
 
-      } else {
-        customColorInput.style.display = "none";
-          otherText.value = select.value;
-          otherColor.value = colorMap[select.value];
-          otherFontColor.value = colorfont[select.value];
+    // 기타1 업데이트
+    if (colorPresetSelect1 !== 'custom') {
+      if (otherText1) {
+        colorMap[otherText1] = colorMap[colorPresetSelect1];
+        colorfont[otherText1] = colorfont[colorPresetSelect1];
+      }
+    } else {
+      if (otherText1) {
+        colorMap[otherText1] = otherColor1;
+        colorfont[otherText1] = otherFontColor1;
+      }
+    }
+
+    // 기타2 업데이트
+    if (colorPresetSelect2 !== 'custom') {
+        if(otherText2){
+            colorMap[otherText2] = colorMap[colorPresetSelect2];
+            colorfont[otherText2] = colorfont[colorPresetSelect2];
+        }
+    } else {
+      if (otherText2) {
+        colorMap[otherText2] = otherColor2;
+        colorfont[otherText2] = otherFontColor2;
       }
     }
 
 
-    function convertText() {
-        let inputText = document.getElementById("inputText").value;
-        let grayText = document.getElementById("grayText").value;
-        let lightGrayText = document.getElementById("lightGrayText").value;
-        let otherText = document.getElementById("otherText").value;
-        let otherColor = document.getElementById("otherColor").value;
-        let otherFontColor = document.getElementById("otherFontColor").value;
-        let colorPresetSelect = document.getElementById("colorPresetSelect").value;
-
-        // 동적으로 colorMap과 colorfont 업데이트
-        if (grayText) {
-            colorMap[grayText] = "#9c9c94";
-            colorfont[grayText] = "#ffffff";
-        }
-        if (lightGrayText) {
-            colorMap[lightGrayText] = "#cec6ce";
-            colorfont[lightGrayText] = "#000000";
-        }
-
-      if(colorPresetSelect !== 'custom'){
-          if (otherText) {
-            colorMap[otherText] = colorMap[colorPresetSelect];
-            colorfont[otherText] = colorfont[colorPresetSelect];
-          }
-      }
-      else{
-        if (otherText) {
-          colorMap[otherText] = otherColor;
-          colorfont[otherText] = otherFontColor;
-        }
-      }
-
-
-        // 첫 번째 변환
-    let outputText = inputText
-      .replace(/<br><\/p><p>(.*?)<\/p><p>/g, function (match, name) {
+    // 첫 번째 변환 (기존 로직)
+    let outputText = inputText.replace(/<br><\/p><p>(.*?)<\/p><p>/g, function (match, name) {
         if (colorMap[name] && colorfont[name]) {
           let rgbColor = hexToRgb(colorMap[name]);
           return `<br></p><p><font color="${colorfont[name]}" style="background-color: ${rgbColor};">${name}</font></p><p>`;
@@ -239,41 +279,52 @@
           return match;
         }
       });
-
-    // 두 번째 변환
-      outputText = outputText.replace(/<br><\/p><p><br><\/p><p>(.*?)<\/p><p>/g, function (match, name) {
-          if (colorMap[name] && colorfont[name]) {
+      // 두 번째 변환 (기존 로직)
+    outputText = outputText.replace(/<br><\/p><p><br><\/p><p>(.*?)<\/p><p>/g, function (match, name) {
+        if (colorMap[name] && colorfont[name]) {
             let rgbColor = hexToRgb(colorMap[name]);
             return `<br></p><p><br></p><p><font color="${colorfont[name]}" style="background-color: ${rgbColor};">${name}</font></p><p>`;
-          } else {
+        } else {
             return match;
-          }
-        });
-
-        document.getElementById("outputText").value = outputText;
-    }
-
-    function copyToClipboard() {
-        let outputText = document.getElementById("outputText");
-        outputText.select();
-        outputText.setSelectionRange(0, 99999); // For mobile devices
-
-        navigator.clipboard.writeText(outputText.value)
-            .then(() => {
-                alert("클립보드에 복사되었습니다.");
-            })
-            .catch(err => {
-                console.error('클립보드 복사 실패: ', err);
-                alert("클립보드 복사에 실패했습니다. 직접 복사해주세요.");
-            });
-    }
-
-    // Initialize: Populate preset options and set up event listener.
-    document.addEventListener("DOMContentLoaded", () => {
-      populateColorPresets();
-      document.getElementById("colorPresetSelect").addEventListener("change", handlePresetChange);
-      handlePresetChange(); // Call once initially to set the initial state.
+        }
     });
+
+
+    document.getElementById("outputText").value = outputText;
+  }
+
+
+
+  function copyToClipboard() {
+    let outputText = document.getElementById("outputText");
+    outputText.select();
+    outputText.setSelectionRange(0, 99999); // For mobile devices
+
+    navigator.clipboard.writeText(outputText.value)
+      .then(() => {
+        alert("클립보드에 복사되었습니다.");
+      })
+      .catch(err => {
+        console.error('클립보드 복사 실패: ', err);
+        alert("클립보드 복사에 실패했습니다. 직접 복사해주세요.");
+      });
+  }
+
+  // Initialize: Populate preset options and set up event listener.
+  document.addEventListener("DOMContentLoaded", () => {
+    populateColorPresets("colorPresetSelect1");
+    populateColorPresets("colorPresetSelect2");
+
+    document.getElementById("colorPresetSelect1").addEventListener("change", () => {
+        handlePresetChange("colorPresetSelect1", "otherColor1", "otherFontColor1", "customColorInput1");
+    });
+    document.getElementById("colorPresetSelect2").addEventListener("change", () => {
+        handlePresetChange("colorPresetSelect2", "otherColor2", "otherFontColor2", "customColorInput2");
+    });
+
+    handlePresetChange("colorPresetSelect1", "otherText1", "otherColor1", "otherFontColor1", "customColorInput1");
+    handlePresetChange("colorPresetSelect2", "otherText2", "otherColor2", "otherFontColor2", "customColorInput2");
+  });
 
 
 </script>
